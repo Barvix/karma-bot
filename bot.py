@@ -9,14 +9,7 @@ import datetime
 
 #https://discordapp.com/oauth2/authorize?&client_id=404097887585304586&scope=bot&
 
-#Art pack ideas
-#Sci-Fi top down, like Asteroids
-#Platformer
-#RPG
-#Those things but as mini games, like jam games
-#Seasonal Assets
-
-description = '''Hi, I'm the :b: -Coin bot!'''
+description = '''Hi, I'm the Karma bot!'''
 bot = commands.Bot(command_prefix='.', description=description)
 bot.remove_command('help')
 
@@ -38,9 +31,14 @@ async def on_message(message):
         rec_name = "<@" + karma + ">"
 
         if (message.author.id == karma):
-            #await bot.send_message(message.channel, "Hey now, you can't give karma to yourself.")
+            await bot.send_message(message.channel, "Hey now, you can't give karma to yourself.")
             return  
 
+        #helpmen_file = open("hm-file.txt", "w")
+        with open("hm-file.txt") as f:
+            helpmen_list = f.readlines()
+            helpmen_list = [x.strip() for x in content]
+        
         if (os.path.exists("karma_"+str(karma)+".txt") == True):
             rec_file = open("karma_"+str(karma)+".txt", "r")
             rcoins = rec_file.readline()
@@ -55,6 +53,11 @@ async def on_message(message):
             rec_file = open("karma_"+str(karma)+".txt", "w+")
             rec_file.write(str("1")+"\n")
             rec_file.close()
+            
+        for i in helpmen_list:
+            tfile = open("karma_"+str(i)+".txt", "w+")
+            tfile.write("0")
+            tfile.close()
 
         name = str(message.author.nick)
 
