@@ -37,7 +37,7 @@ async def on_message(message):
         #helpmen_file = open("hm-file.txt", "w")
         with open("hm-list.txt") as f:
             helpmen_list = f.readlines()
-            helpmen_list = [x.strip() for x in content]
+            helpmen_list = [x.strip() for x in helpmen_list]
         
         if (os.path.exists("karma_"+str(karma)+".txt") == True):
             rec_file = open("karma_"+str(karma)+".txt", "r")
