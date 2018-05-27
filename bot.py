@@ -35,7 +35,7 @@ async def on_message(message):
             return  
 
         #helpmen_file = open("hm-file.txt", "w")
-        with open("hm-file.txt") as f:
+        with open("hm-list.txt") as f:
             helpmen_list = f.readlines()
             helpmen_list = [x.strip() for x in content]
         
