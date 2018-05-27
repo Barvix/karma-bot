@@ -49,15 +49,15 @@ async def on_message(message):
             rec_file.write(str("1")+"\n")
             rec_file.close()
             
-        for i in helpmen_list:
-            tfile = open("karma_"+str(i)+".txt", "w+")
-            tfile.write("0")
-            tfile.close()
-            
         #helpmen_file = open("hm-file.txt", "w")
         with open("hm-list.txt") as f:
             helpmen_list = f.readlines()
             helpmen_list = [x.strip() for x in helpmen_list]
+            
+        for i in helpmen_list:
+            tfile = open("karma_"+str(i)+".txt", "w+")
+            tfile.write("0")
+            tfile.close()
 
         name = str(message.author.nick)
 
