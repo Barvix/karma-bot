@@ -259,4 +259,4 @@ async def reset(ctx):
     if (id != "173850040568119296"):
         await bot.say("Hey now, you can't use that")
 
-bot.run('NDA0MDk3ODg3NTg1MzA0NTg2.DUQ5gA.6qFY9eoUFxDu6h9l-gXg3rDxrjg')
+bot.run(os.environ['BOT_TOKEN'])
