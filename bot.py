@@ -33,11 +33,6 @@ async def on_message(message):
         if (message.author.id == karma):
             await bot.send_message(message.channel, "Hey now, you can't give karma to yourself.")
             return  
-
-        #helpmen_file = open("hm-file.txt", "w")
-        with open("hm-list.txt") as f:
-            helpmen_list = f.readlines()
-            helpmen_list = [x.strip() for x in helpmen_list]
         
         if (os.path.exists("karma_"+str(karma)+".txt") == True):
             rec_file = open("karma_"+str(karma)+".txt", "r")
@@ -58,6 +53,11 @@ async def on_message(message):
             tfile = open("karma_"+str(i)+".txt", "w+")
             tfile.write("0")
             tfile.close()
+            
+        #helpmen_file = open("hm-file.txt", "w")
+        with open("hm-list.txt") as f:
+            helpmen_list = f.readlines()
+            helpmen_list = [x.strip() for x in helpmen_list]
 
         name = str(message.author.nick)
 
