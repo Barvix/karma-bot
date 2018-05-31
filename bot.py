@@ -80,6 +80,29 @@ async def on_ready():
     await bot.send_message(chn, "Reset complete :D")
 
 @bot.command(pass_context = True)
+async def view_karma_member(ctx, member: str):
+    member = member.replace("@", "")
+    member = member.replace("<", "")
+    member = member.replace(">", "")
+    member = member.replace("!", "")
+    
+    if (os.path.exists("karma_"+str(member)+".txt") == True):
+        giv_file = open("karma_"+member+".txt", "r+")
+        gcoins = giv_file.readline()
+        gcoins = int(gcoins.rstrip())
+        giv_file.close()
+        
+    if (os.path.exists("karma_"+str(member)+".txt") == False):
+        giv_file = open("karma_"+str(member)+".txt", "w+")
+        giv_file.write(str("0")+"\n")
+        giv_file.close()
+        gcoins = 0
+        
+    #print(name + " has " + str(gcoins) + " coins.")
+    await bot.say("They have " + str(gcoins) + " karma.")
+    
+    
+@bot.command(pass_context = True)
 async def help(ctx):
     embed = discord.Embed(title="help ", description="        This Command shows you commands for me", color=0x7abae8)
     embed.add_field(name="view_karma ", value="        Shows you how much karma you have.", inline=False)
