@@ -136,6 +136,8 @@ async def view_karma_member(ctx, member: str):
     BUCKET_NAME = 'cloud-cube' # replace with your bucket name
     KEY = "ctzu5erud1ha/"+filename # replace with your object key
 
+    gcoins = 0
+    
     try:
         xs3.Bucket(BUCKET_NAME).download_file(KEY, filename)
     except botocore.exceptions.ClientError as e:
@@ -145,6 +147,7 @@ async def view_karma_member(ctx, member: str):
             giv_file.write(str("0")+"\n")
             giv_file.close()
             gcoins = 0
+            print(str(gcoins))
 
         else:
             raise
@@ -153,6 +156,7 @@ async def view_karma_member(ctx, member: str):
             gcoins = giv_file.readline()
             gcoins = int(gcoins.rstrip())
             giv_file.close()
+            print(str(gcoins))
         
     #print(name + " has " + str(gcoins) + " coins.")
     await bot.say("They have " + str(gcoins) + " karma.")
