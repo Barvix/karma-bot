@@ -123,17 +123,36 @@ async def view_karma_member(ctx, member: str):
     member = member.replace(">", "")
     member = member.replace("!", "")
     
-    if (os.path.exists("karma_"+str(member)+".txt") == True):
-        giv_file = open("karma_"+member+".txt", "r+")
-        gcoins = giv_file.readline()
-        gcoins = int(gcoins.rstrip())
-        giv_file.close()
-        
-    if (os.path.exists("karma_"+str(member)+".txt") == False):
-        giv_file = open("karma_"+str(member)+".txt", "w+")
-        giv_file.write(str("0")+"\n")
-        giv_file.close()
-        gcoins = 0
+    global s3
+    
+    xs3 = boto3.resource('s3', 
+    aws_access_key_id=os.environ['CLOUDCUBE_ACCESS_KEY_ID'],
+    aws_secret_access_key=os.environ['CLOUDCUBE_SECRET_ACCESS_KEY'],
+    region_name='us-west-1'
+    )
+    
+    filename = "karma_"+str(karma)+".txt"
+    
+    BUCKET_NAME = 'cloud-cube' # replace with your bucket name
+    KEY = "ctzu5erud1ha/"+filename # replace with your object key
+
+    try:
+        xs3.Bucket(BUCKET_NAME).download_file(KEY, filename)
+    except botocore.exceptions.ClientError as e:
+        if e.response['Error']['Code'] == "404":
+
+            giv_file = open(filename, "w+")
+            giv_file.write(str("0")+"\n")
+            giv_file.close()
+            gcoins = 0
+
+        else:
+            raise
+
+            giv_file = open(filename, "r+")
+            gcoins = giv_file.readline()
+            gcoins = int(gcoins.rstrip())
+            giv_file.close()
         
     #print(name + " has " + str(gcoins) + " coins.")
     await bot.say("They have " + str(gcoins) + " karma.")
@@ -153,6 +172,27 @@ async def help(ctx):
 async def view_all_karma(ctx):
     files = []
     coins = 0
+        
+    global s3
+    
+    xs3 = boto3.resource('s3', 
+    aws_access_key_id=os.environ['CLOUDCUBE_ACCESS_KEY_ID'],
+    aws_secret_access_key=os.environ['CLOUDCUBE_SECRET_ACCESS_KEY'],
+    region_name='us-west-1'
+    )
+    
+    filename = "karma_"+str(karma)+".txt"
+    
+    BUCKET_NAME = 'cloud-cube' # replace with your bucket name
+    KEY = "ctzu5erud1ha/"+filename # replace with your object key
+        
+    my_bucket = s3.Bucket(BUCKET_NAME)
+
+    # download file into current directory
+    for object in my_bucket.objects.all():
+        if "ctzu5erud1ha/karma_" in object.key:
+            filename = str(object.key).replace("ctzu5erud1ha/","")
+            my_bucket.download_file(object.key, filename)
         
     list_of_files = os.listdir(os.getcwd()) #list of files in the current directory
     for each_file in list_of_files:
