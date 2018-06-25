@@ -6,6 +6,8 @@ import datetime
 import random
 from dateutil.relativedelta import relativedelta
 import datetime
+import boto3
+import botocore
 
 #https://discordapp.com/oauth2/authorize?&client_id=404097887585304586&scope=bot&
 
@@ -15,11 +17,37 @@ bot.remove_command('help')
 
 s = discord.Server
 
+session = boto3.Session(
+    #aws_access_key_id=settings.AWS_SERVER_PUBLIC_KEY,
+    #aws_secret_access_key=settings.AWS_SERVER_SECRET_KEY,
+    aws_access_key_id=os.environ['CLOUDCUBE_ACCESS_KEY_ID'],
+    aws_secret_access_key=os.environ['CLOUDCUBE_SECRET_ACCESS_KEY'],
+)
+
+s3 = boto3.client('s3', 
+    aws_access_key_id=os.environ['CLOUDCUBE_ACCESS_KEY_ID'],
+    aws_secret_access_key=os.environ['CLOUDCUBE_SECRET_ACCESS_KEY'],
+    region_name='us-west-1'
+)
+
 @bot.event
 async def on_message(message):
 
     if (message.author == bot.user):
         return
+    
+    global s3
+
+    challenge_file = "entries_"+challenge_name+".txt"
+    
+    BUCKET_NAME = 'cloud-cube' # replace with your bucket name
+    KEY = "ctzu5erud1ha/"+challenge_file # replace with your object key
+
+    xs3 = boto3.resource('s3', 
+    aws_access_key_id=os.environ['CLOUDCUBE_ACCESS_KEY_ID'],
+    aws_secret_access_key=os.environ['CLOUDCUBE_SECRET_ACCESS_KEY'],
+    region_name='us-west-1'
+    )
     
     massage = "I"
     
@@ -34,20 +62,27 @@ async def on_message(message):
             await bot.send_message(message.channel, "Hey now, you can't give karma to yourself.")
             return  
         
-        if (os.path.exists("karma_"+str(karma)+".txt") == True):
-            rec_file = open("karma_"+str(karma)+".txt", "r")
-            rcoins = rec_file.readline()
-            rcoins = int(str(rcoins).rstrip())
-            rec_file.close()
-            
-            rec_file = open("karma_"+str(karma)+".txt", "w")
-            rec_file.write(str(rcoins+1)+"\n")
-            rec_file.close()
+        try:
+            xs3.Bucket(BUCKET_NAME).download_file(KEY, challenge_file)
+        except botocore.exceptions.ClientError as e:
+            if e.response['Error']['Code'] == "404":
+
+                rec_file = open("karma_"+str(karma)+".txt", "w+")
+                rec_file.write(str("1")+"\n")
+                rec_file.close()
+                
+            else:
+                raise
         
-        if (os.path.exists("karma_"+str(karma)+".txt") == False):
-            rec_file = open("karma_"+str(karma)+".txt", "w+")
-            rec_file.write(str("1")+"\n")
-            rec_file.close()
+                rec_file = open("karma_"+str(karma)+".txt", "r")
+                rcoins = rec_file.readline()
+                rcoins = int(str(rcoins).rstrip())
+                rec_file.close()
+
+                rec_file = open("karma_"+str(karma)+".txt", "w")
+                rec_file.write(str(rcoins+1)+"\n")
+                rec_file.close()
+        
             
         #helpmen_file = open("hm-file.txt", "w")
         with open("hm-list.txt") as f:
