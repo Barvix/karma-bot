@@ -190,9 +190,16 @@ async def view_all_karma(ctx):
 
     # download file into current directory
     for object in my_bucket.objects.all():
-        if "ctzu5erud1ha/karma_" in object.key:
-            filename = str(object.key).replace("ctzu5erud1ha/","")
-            my_bucket.download_file(object.key, filename)
+        if "ctzu5erud1ha/karma_" in str(object.key):
+            filename = str(object.key)
+            filename = filename.replace("ctzu5erud1ha/","")
+            try:
+                my_bucket.download_file(object.key, filename)
+            except botocore.exceptions.ClientError as e:
+                if e.response['Error']['Code'] == "404":
+                    print("")
+                else:
+                    raise
         
     list_of_files = os.listdir(os.getcwd()) #list of files in the current directory
     for each_file in list_of_files:
