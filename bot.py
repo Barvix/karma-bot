@@ -37,12 +37,7 @@ async def on_message(message):
         return
     
     global s3
-
-    challenge_file = "entries_"+challenge_name+".txt"
     
-    BUCKET_NAME = 'cloud-cube' # replace with your bucket name
-    KEY = "ctzu5erud1ha/"+challenge_file # replace with your object key
-
     xs3 = boto3.resource('s3', 
     aws_access_key_id=os.environ['CLOUDCUBE_ACCESS_KEY_ID'],
     aws_secret_access_key=os.environ['CLOUDCUBE_SECRET_ACCESS_KEY'],
@@ -61,6 +56,11 @@ async def on_message(message):
         if (message.author.id == karma):
             await bot.send_message(message.channel, "Hey now, you can't give karma to yourself.")
             return  
+        
+        filename = "karma_"+str(karma)+".txt"
+    
+        BUCKET_NAME = 'cloud-cube' # replace with your bucket name
+        KEY = "ctzu5erud1ha/"+filename # replace with your object key
         
         try:
             xs3.Bucket(BUCKET_NAME).download_file(KEY, challenge_file)
@@ -94,6 +94,8 @@ async def on_message(message):
             tfile.write("0")
             tfile.close()
 
+        s3.upload_file(filename, bucket_name, "ctzu5erud1ha/"+filename)
+            
         name = str(message.author.nick)
 
         if (name=="None"):
