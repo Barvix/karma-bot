@@ -94,7 +94,7 @@ async def on_message(message):
             tfile.write("0")
             tfile.close()
 
-        s3.upload_file(filename, bucket_name, "ctzu5erud1ha/"+filename)
+        s3.upload_file(filename, BUCKET_NAME, "ctzu5erud1ha/"+filename)
             
         name = str(message.author.nick)
 
