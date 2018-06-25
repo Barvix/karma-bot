@@ -63,7 +63,7 @@ async def on_message(message):
         KEY = "ctzu5erud1ha/"+filename # replace with your object key
         
         try:
-            xs3.Bucket(BUCKET_NAME).download_file(KEY, challenge_file)
+            xs3.Bucket(BUCKET_NAME).download_file(KEY, filename)
         except botocore.exceptions.ClientError as e:
             if e.response['Error']['Code'] == "404":
 
