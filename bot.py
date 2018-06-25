@@ -131,7 +131,7 @@ async def view_karma_member(ctx, member: str):
     region_name='us-west-1'
     )
     
-    filename = "karma_"+str(karma)+".txt"
+    filename = "karma_"+str(member)+".txt"
     
     BUCKET_NAME = 'cloud-cube' # replace with your bucket name
     KEY = "ctzu5erud1ha/"+filename # replace with your object key
@@ -185,7 +185,7 @@ async def view_all_karma(ctx):
     region_name='us-west-1'
     )
     
-    filename = "karma_"+str(karma)+".txt"
+    #filename = "karma_"+str(karma)+".txt"
     
     BUCKET_NAME = 'cloud-cube' # replace with your bucket name
     KEY = "ctzu5erud1ha/"+filename # replace with your object key
